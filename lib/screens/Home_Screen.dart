@@ -13,7 +13,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../component/app_large_text.dart';
 import '../component/text_app.dart';
-import 'destination_screen.dart';
 import 'editfamousHotel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -321,14 +320,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             final DocumentSnapshot documentSnapshot =
                                 snapshot.data!.docs[index];
                             return GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DestinationScreen(
-                                    documentSnapshot: documentSnapshot,
-                                  ),
-                                ),
-                              ),
+                              // onTap: () => Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => DestinationScreen(
+                              //       idCity: documentSnapshot.id,
+                              //       documentSnapshot: documentSnapshot,
+                              //     ),
+                              //   ),
+                              // ),
                               child: Container(
                                 margin: EdgeInsets.only(left: 10, right: 15),
                                 width: 230,

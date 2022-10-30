@@ -9,42 +9,61 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class editHotel_Screen extends StatefulWidget {
-  editHotel_Screen(this.documentSnapshot, {Key? key}) : super(key: key);
-  DocumentSnapshot? documentSnapshot;
+class editKindofRoom extends StatefulWidget {
+  const editKindofRoom({Key? key, required this.documentSnapshot})
+      : super(key: key);
+  final DocumentSnapshot documentSnapshot;
   @override
-  State<editHotel_Screen> createState() => _editHotel_ScreenState();
+  State<editKindofRoom> createState() => _editKindofRoomState();
 }
 
-class _editHotel_ScreenState extends State<editHotel_Screen> {
-  final TextEditingController _imageUrlEdittingController =
+class _editKindofRoomState extends State<editKindofRoom> {
+  TextEditingController _imageRoomEdittingController = TextEditingController();
+  TextEditingController _nameRoomEdittingController = TextEditingController();
+  TextEditingController _bedRoomRoomEdittingController =
       TextEditingController();
-  final TextEditingController _nameHotelEdittingController =
+  TextEditingController _areaRoomEdittingController = TextEditingController();
+  TextEditingController _sizeRoomEdittingController = TextEditingController();
+  TextEditingController _descriptionRoomEdittingController =
       TextEditingController();
-  final TextEditingController _priceEdittingController =
-      TextEditingController();
-  final TextEditingController _cityNameEdittingController =
-      TextEditingController();
-  final TextEditingController _checkInEdittingController =
-      TextEditingController();
-  final TextEditingController _checkOutEdittingController =
-      TextEditingController();
-  final TextEditingController _addressEdittingController =
-      TextEditingController();
-  final TextEditingController _descriptionEdittingController =
-      TextEditingController();
-  String? imageHotelUrl;
+  TextEditingController _priceRoomEdittingController = TextEditingController();
+  String? imageRoom;
+  uploadImage() async {
+    final imagePicker = ImagePicker();
+    PickedFile? image;
+    await Permission.photos.request();
+    var permissionStatus = await Permission.photos.status;
+    if (permissionStatus.isGranted) {
+      image = await imagePicker.getImage(source: ImageSource.gallery);
+      var file = File(image!.path);
+      if (image != null) {
+        var snapshot = await FirebaseStorage.instance
+            .ref()
+            .child('hotelImage/${image.path.split('/').last}')
+            .putFile(file)
+            .whenComplete(() => print('success'));
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+        setState(() {
+          imageRoom = downloadUrl;
+        });
+      } else {
+        print('No image path received');
+      }
+    } else {
+      print('Permission not granted. Try again with permission access');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    _imageUrlEdittingController.text = widget.documentSnapshot!['imageUrl'];
-    _nameHotelEdittingController.text = widget.documentSnapshot!['nameHotel'];
-    _priceEdittingController.text = widget.documentSnapshot!['price'];
-    _cityNameEdittingController.text = widget.documentSnapshot!['nameCity'];
-    _checkInEdittingController.text = widget.documentSnapshot!['checkIn'];
-    _checkOutEdittingController.text = widget.documentSnapshot!['checkOut'];
-    _addressEdittingController.text = widget.documentSnapshot!['address'];
-    _descriptionEdittingController.text =
-        widget.documentSnapshot!['description'];
+    _imageRoomEdittingController.text = widget.documentSnapshot['imageRoom'];
+    _nameRoomEdittingController.text = widget.documentSnapshot['nameRoom'];
+    _bedRoomRoomEdittingController.text = widget.documentSnapshot['bedroom'];
+    _sizeRoomEdittingController.text = widget.documentSnapshot['size'];
+    _areaRoomEdittingController.text = widget.documentSnapshot['area'];
+    _descriptionRoomEdittingController.text =
+        widget.documentSnapshot['description'];
+    _priceRoomEdittingController.text = widget.documentSnapshot['price'];
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -57,7 +76,7 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              imageHotelUrl == null
+              imageRoom == null
                   ? GestureDetector(
                       onTap: uploadImage,
                       child: Container(
@@ -75,7 +94,7 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
                               image: NetworkImage(
-                                  widget.documentSnapshot!['imageUrl']),
+                                  widget.documentSnapshot['imageRoom']),
                               fit: BoxFit.cover,
                             )),
                       ),
@@ -87,7 +106,7 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                           color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
-                            image: NetworkImage(imageHotelUrl!),
+                            image: NetworkImage(imageRoom!),
                             fit: BoxFit.cover,
                           )),
                     ),
@@ -95,9 +114,9 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                 height: 20,
               ),
               TextField(
-                controller: _nameHotelEdittingController,
+                controller: _nameRoomEdittingController,
                 decoration: const InputDecoration(
-                  labelText: 'Tên khách sạn',
+                  labelText: 'Tên loại phòng',
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   border: OutlineInputBorder(),
                 ),
@@ -108,9 +127,9 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
               TextField(
                 // keyboardType:
                 // const TextInputType.numberWithOptions(decimal: true),
-                controller: _priceEdittingController,
+                controller: _bedRoomRoomEdittingController,
                 decoration: const InputDecoration(
-                  labelText: 'Giá khách sạn',
+                  labelText: 'Số lượng giường',
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   border: OutlineInputBorder(),
                 ),
@@ -121,9 +140,9 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
               TextField(
                 // keyboardType:
                 // const TextInputType.numberWithOptions(decimal: true),
-                controller: _cityNameEdittingController,
+                controller: _areaRoomEdittingController,
                 decoration: const InputDecoration(
-                  labelText: 'Tên thành phố',
+                  labelText: 'Diện tích phòng',
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   border: OutlineInputBorder(),
                 ),
@@ -134,9 +153,9 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
               TextField(
                 // keyboardType:
                 // const TextInputType.numberWithOptions(decimal: true),
-                controller: _checkInEdittingController,
+                controller: _sizeRoomEdittingController,
                 decoration: const InputDecoration(
-                  labelText: 'Thời gian nhận phòng',
+                  labelText: 'Số lượng người ',
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   border: OutlineInputBorder(),
                 ),
@@ -147,39 +166,28 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
               TextField(
                 // keyboardType:
                 // const TextInputType.numberWithOptions(decimal: true),
-                controller: _checkOutEdittingController,
-                decoration: const InputDecoration(
-                  labelText: 'Thời gian trả phòng',
-                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextField(
-                // keyboardType:
-                // const TextInputType.numberWithOptions(decimal: true),
-                controller: _addressEdittingController,
-                decoration: const InputDecoration(
-                  labelText: 'Địa chỉ khách sạn',
-                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              TextField(
-                maxLines: 3,
-                // keyboardType:
-                // const TextInputType.numberWithOptions(decimal: true),
-                controller: _descriptionEdittingController,
+                controller: _descriptionRoomEdittingController,
                 decoration: const InputDecoration(
                   labelText: 'Mô tả',
-                  contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                   border: OutlineInputBorder(),
                 ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              TextField(
+                // keyboardType:
+                // const TextInputType.numberWithOptions(decimal: true),
+                controller: _priceRoomEdittingController,
+                decoration: const InputDecoration(
+                  labelText: 'Giá phòng',
+                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(
+                height: 15,
               ),
               SizedBox(
                 height: 20,
@@ -202,29 +210,29 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                             fontSize: 20),
                       ),
                       onPressed: () async {
-                        final String _imageUrl =
-                            _imageUrlEdittingController.text;
-                        final String _nameHotel =
-                            _nameHotelEdittingController.text;
-                        final String _price = _priceEdittingController.text;
-                        final String _cityName =
-                            _cityNameEdittingController.text;
-                        final String _checkIn = _checkInEdittingController.text;
-                        final String _checkOut =
-                            _checkOutEdittingController.text;
-                        final String _address = _addressEdittingController.text;
+                        final String _imageRoom =
+                            _imageRoomEdittingController.text;
+                        final String _nameRoom =
+                            _nameRoomEdittingController.text;
+                        final String _bedRoom =
+                            _bedRoomRoomEdittingController.text;
+                        final String _areRoom =
+                            _areaRoomEdittingController.text;
+                        final String _sizeRoom =
+                            _sizeRoomEdittingController.text;
                         final String _description =
-                            _descriptionEdittingController.text;
-                        if (imageHotelUrl != null) {
-                          await widget.documentSnapshot!.reference.update({
-                            "imageUrl": imageHotelUrl,
-                            "nameHotel": _nameHotel,
-                            "price": _price,
-                            "nameCity": _cityName,
-                            "checkIn": _checkIn,
-                            "checkOut": _checkOut,
-                            "address": _address,
+                            _descriptionRoomEdittingController.text;
+                        final String _priceRoom =
+                            _priceRoomEdittingController.text;
+                        if (imageRoom != null) {
+                          await widget.documentSnapshot.reference.update({
+                            "imageRoom": imageRoom,
+                            "nameRoom": _nameRoom,
+                            "bedroom": _bedRoom,
+                            "area": _areRoom,
+                            "size": _sizeRoom,
                             "description": _description,
+                            "price": _priceRoom,
                           });
                           Navigator.of(context).pop();
                           EasyLoading.showSuccess(
@@ -233,15 +241,14 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                             maskType: EasyLoadingMaskType.black,
                           );
                         } else {
-                          await widget.documentSnapshot!.reference.update({
-                            "imageUrl": widget.documentSnapshot!['imageUrl'],
-                            "nameHotel": _nameHotel,
-                            "price": _price,
-                            "nameCity": _cityName,
-                            "checkIn": _checkIn,
-                            "checkOut": _checkOut,
-                            "address": _address,
+                          await widget.documentSnapshot.reference.update({
+                            "imageRoom": widget.documentSnapshot['imageRoom'],
+                            "nameRoom": _nameRoom,
+                            "bedroom": _bedRoom,
+                            "area": _areRoom,
+                            "size": _sizeRoom,
                             "description": _description,
+                            "price": _priceRoom,
                           });
                           Navigator.of(context).pop();
                           EasyLoading.showSuccess(
@@ -250,13 +257,13 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
                             maskType: EasyLoadingMaskType.black,
                           );
                         }
-                        print(widget.documentSnapshot!.id);
+                        print(widget.documentSnapshot.id);
                       },
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      widget.documentSnapshot!.reference.delete();
+                      widget.documentSnapshot.reference.delete();
                       Navigator.of(context).pop();
                       EasyLoading.showSuccess(
                         'Xóa thành công!',
@@ -312,31 +319,5 @@ class _editHotel_ScreenState extends State<editHotel_Screen> {
         ),
       ),
     );
-  }
-
-  uploadImage() async {
-    final imagePicker = ImagePicker();
-    PickedFile? image;
-    await Permission.photos.request();
-    var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-      image = await imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image!.path);
-      if (image != null) {
-        var snapshot = await FirebaseStorage.instance
-            .ref()
-            .child('hotelImage/${image.path.split('/').last}')
-            .putFile(file)
-            .whenComplete(() => print('success'));
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageHotelUrl = downloadUrl;
-        });
-      } else {
-        print('No image path received');
-      }
-    } else {
-      print('Permission not granted. Try again with permission access');
-    }
   }
 }

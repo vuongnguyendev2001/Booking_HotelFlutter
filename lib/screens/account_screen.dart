@@ -42,6 +42,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
     });
   }
 
+  String? admin = 'admin@email.com';
   @override
   Widget listTitle(
       {required IconData icon, required String title, required onPress}) {
@@ -74,6 +75,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var currentUser = loggedInUser.email;
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBar(
@@ -156,16 +158,29 @@ class _AccountScreenStateState extends State<AccountScreen> {
                         icon: FontAwesomeIcons.penToSquare,
                         title: "Chỉnh sửa thông tin",
                       ),
-                      listTitle(
-                        onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => myorder_Screen()));
-                        },
-                        icon: FontAwesomeIcons.landmark,
-                        title: "Lịch sử đặt phòng",
-                      ),
+                      currentUser == admin
+                          ? listTitle(
+                              onPress: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            myorder_Screen()));
+                              },
+                              icon: FontAwesomeIcons.landmark,
+                              title: "Lịch sử đặt phòng của user",
+                            )
+                          : listTitle(
+                              onPress: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            myorder_Screen()));
+                              },
+                              icon: FontAwesomeIcons.landmark,
+                              title: "Lịch sử đặt phòng",
+                            ),
                       // listTitle(
                       //   onPress: (){},
                       //   icon: FontAwesomeIcons.creditCard,

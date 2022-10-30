@@ -117,6 +117,7 @@ class _all_CityState extends State<all_City> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => allHotel_Screen(
+                                      idCity: documentSnapshot.id,
                                       documentSnapshot: documentSnapshot,
                                     )));
                       },
