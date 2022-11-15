@@ -6,7 +6,6 @@
 ![homepageuser](https://user-images.githubusercontent.com/97358392/201888211-84567988-b06b-473c-b255-26683d74ba9f.png)
 ![allCity1](https://user-images.githubusercontent.com/97358392/201888268-9b4ea69c-777b-4377-890f-cafc2f23f3ef.png)
 ![allCityadmin1](https://user-images.githubusercontent.com/97358392/201888283-c65dc002-271f-4d2a-8530-acf09ce200a9.png)
-![historybook1](https://user-images.githubusercontent.com/97358392/201888328-bcae3dcb-a936-4ac1-af31-9a9f42d12407.png)
 ![editHotel12](https://user-images.githubusercontent.com/97358392/201888412-041d6536-fb00-440d-af7b-7229dd8e0876.png)
 ![editCity1](https://user-images.githubusercontent.com/97358392/201888451-a51ae507-b4c7-4adf-b93f-55898d4381e7.png)
 ![addcity1](https://user-images.githubusercontent.com/97358392/201888525-bf78f364-f17e-4e9d-9144-d7f427de3684.png)
