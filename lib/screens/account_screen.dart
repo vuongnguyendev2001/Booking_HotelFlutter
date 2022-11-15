@@ -153,7 +153,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => editProfile_Screen(
-                                      currentUserId: '${loggedInUser.uid}')));
+                                      currentUserId: loggedInUser.uid!)));
                         },
                         icon: FontAwesomeIcons.penToSquare,
                         title: "Chỉnh sửa thông tin",
