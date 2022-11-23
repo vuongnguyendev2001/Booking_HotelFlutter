@@ -239,27 +239,28 @@ class _editProfile_ScreenState extends State<editProfile_Screen> {
 
   uploadImage() async {
     final imagePicker = ImagePicker();
-    PickedFile? image;
-    await Permission.photos.request();
+    XFile? image;
+    await Permission.photos.status;
     var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-      image = await imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image!.path);
-      if (image != null) {
-        var snapshot = await FirebaseStorage.instance
-            .ref()
-            .child('avatar/${image.path.split('/').last}')
-            .putFile(file)
-            .whenComplete(() => print('success'));
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          avatarImage = downloadUrl;
-        });
-      } else {
-        print('No image path received');
-      }
+    print(permissionStatus);
+    // if (permissionStatus.isGranted) {
+    image = await imagePicker.pickImage(source: ImageSource.gallery);
+    var file = File(image!.path);
+    if (image != null) {
+      var snapshot = await FirebaseStorage.instance
+          .ref()
+          .child('avatar/${image.path.split('/').last}')
+          .putFile(file)
+          .whenComplete(() => print('success'));
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        avatarImage = downloadUrl;
+      });
     } else {
-      print('Permission not granted. Try again with permission access');
+      print('No image path received');
     }
+    // } else {
+    //   print('Permission not granted. Try again with permission access');
+    // }
   }
 }

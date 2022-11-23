@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,25 +32,25 @@ class _editKindofRoomState extends State<editKindofRoom> {
     PickedFile? image;
     await Permission.photos.request();
     var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-      image = await imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image!.path);
-      if (image != null) {
-        var snapshot = await FirebaseStorage.instance
-            .ref()
-            .child('hotelImage/${image.path.split('/').last}')
-            .putFile(file)
-            .whenComplete(() => print('success'));
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageRoom = downloadUrl;
-        });
-      } else {
-        print('No image path received');
-      }
+    // if (permissionStatus.isGranted) {
+    image = await imagePicker.getImage(source: ImageSource.gallery);
+    var file = File(image!.path);
+    if (image != null) {
+      var snapshot = await FirebaseStorage.instance
+          .ref()
+          .child('hotelImage/${image.path.split('/').last}')
+          .putFile(file)
+          .whenComplete(() => print('success'));
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        imageRoom = downloadUrl;
+      });
     } else {
-      print('Permission not granted. Try again with permission access');
+      print('No image path received');
     }
+    // } else {
+    //   print('Permission not granted. Try again with permission access');
+    // }
   }
 
   @override
