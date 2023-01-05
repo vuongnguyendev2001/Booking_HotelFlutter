@@ -1,26 +1,26 @@
-import 'package:app_booking/screens/addHotel_Screen.dart';
 import 'package:app_booking/screens/destination_screen.dart';
+import 'package:app_booking/services/hotel_management/addHotel_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
-import 'editHotel_Screen.dart';
+import '../services/hotel_management/editHotel_Screen.dart';
 
 late User loggedInUser;
 
-class allHotel_Screen extends StatefulWidget {
-  allHotel_Screen({required this.documentSnapshot, required this.idCity});
+class All_Hotel_Screen extends StatefulWidget {
+  All_Hotel_Screen({required this.documentSnapshot, required this.idCity});
   DocumentSnapshot? documentSnapshot;
   final String idCity;
   @override
-  State<allHotel_Screen> createState() => _allHotel_ScreenState();
+  State<All_Hotel_Screen> createState() => _All_Hotel_ScreenState();
 }
 
-class _allHotel_ScreenState extends State<allHotel_Screen> {
+class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
   final String admin = "admin@email.com";
   final _auth = FirebaseAuth.instance;
   void initState() {
@@ -264,7 +264,11 @@ class _allHotel_ScreenState extends State<allHotel_Screen> {
                                         ),
                                       ),
                                       Text(
-                                        'VND ' + document['price'],
+                                        'Giá từ ' +
+                                            NumberFormat.simpleCurrency(
+                                                    locale: 'vi-VN',
+                                                    decimalDigits: 0)
+                                                .format(document['price']),
                                         style: TextStyle(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w600,

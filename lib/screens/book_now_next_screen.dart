@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
-import 'myorder_Screen.dart';
+import 'order_screen.dart';
 
-class Booknow1_Screen extends StatefulWidget {
+class BookNowNextScreen extends StatefulWidget {
   final DocumentSnapshot documentSnapshotHotel;
   final DocumentSnapshot documentSnapshot;
   final String idHotel;
   final String idCity;
   final String idRoom;
-  Booknow1_Screen(
+  BookNowNextScreen(
       {Key? key,
       required this.documentSnapshot,
       required this.idHotel,
@@ -23,12 +23,12 @@ class Booknow1_Screen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Booknow1_Screen> createState() => _Booknow1_ScreenState();
+  State<BookNowNextScreen> createState() => _BookNowNextScreenState();
 }
 
 late User loggedInUser;
 
-class _Booknow1_ScreenState extends State<Booknow1_Screen> {
+class _BookNowNextScreenState extends State<BookNowNextScreen> {
   final _auth = FirebaseAuth.instance;
   final _booking = FirebaseFirestore.instance;
   DateTime? _startDate = DateTime.now();
@@ -54,6 +54,10 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
   int _countRoom = 1;
   int _diference = 0;
   void _incrementCount() {
+    if (_countRoom > 2) {
+      EasyLoading.showError('Số lượng phòng quá lớn !');
+      return;
+    }
     setState(() {
       _countRoom++;
       print(_countRoom);
@@ -61,7 +65,8 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
   }
 
   void _decrementCount() {
-    if (_countRoom < 1) {
+    if (_countRoom <= 1) {
+      EasyLoading.showError('Số lượng phòng bằng 0');
       return;
     }
     setState(() {
@@ -78,13 +83,12 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
       "startDate": _startDate,
       "endDate": _endDate,
       "room": _countRoom,
-      "price":
-          (int.parse(widget.documentSnapshot['price']) * _countRoom).toString(),
+      "price": widget.documentSnapshot['price'] * _countRoom,
       "emailUser": loggedInUser.email,
       "DateTimebooking": DateTime.now(),
     });
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-        builder: (context) => myorder_Screen(), maintainState: true));
+        builder: (context) => OrderScreen(), maintainState: true));
     EasyLoading.showSuccess(
       'Đặt phòng thành công!',
       duration: Duration(milliseconds: 1300),
@@ -92,11 +96,10 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
     );
   }
 
-  // List<String> rooms = ["1 giường", "2 giường", "3 giường", "4 giường"];
   int selectedBed = 0;
   @override
   Widget build(BuildContext context) {
-    final int price = int.parse(widget.documentSnapshot['price']) * _countRoom;
+    final int price = widget.documentSnapshot['price'] * _countRoom;
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -127,7 +130,7 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
                             height: 10,
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.width * 0.35,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               color: Colors.grey.shade400,
@@ -434,23 +437,6 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
                               ),
                             ],
                           ),
-                          // Container(
-                          //   alignment: Alignment.center,
-                          //   width: MediaQuery.of(context).size.width * 0.4,
-                          //   height: MediaQuery.of(context).size.width * 0.1,
-                          //   color: Colors.grey,
-                          //   child: DropdownButton<String>(
-                          //       value: selectedRoom,
-                          //       items: rooms
-                          //           .map((room) => DropdownMenuItem<String>(
-                          //               value: room, child: Text(room)))
-                          //           .toList(),
-                          //       onChanged: (room) {
-                          //         setState(() {
-                          //           selectedRoom = room;
-                          //         });
-                          //       }),
-                          // ),
                           SizedBox(
                             height: 15.0,
                           ),
@@ -466,7 +452,9 @@ class _Booknow1_ScreenState extends State<Booknow1_Screen> {
                                 ),
                               ),
                               Text(
-                                '$price' ' VND',
+                                NumberFormat.simpleCurrency(
+                                        locale: 'vi-VN', decimalDigits: 0)
+                                    .format(price),
                                 style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.w500,

@@ -1,7 +1,7 @@
-import 'package:app_booking/screens/navbar.dart';
+import 'package:app_booking/layout/layout_screen.dart';
+import 'package:app_booking/resources/authentication_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,21 +10,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../component/button.dart';
 import '../component/contrast.dart';
-import 'gegister.dart';
+import 'sign_up_screen.dart';
 
 void main() {}
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final usersRef = FirebaseFirestore.instance.collection('users');
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({Key? key}) : super(key: key);
   static const String id = 'login';
   @override
-  State<Login> createState() => _LoginState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginState extends State<Login> {
+class _SignInScreenState extends State<SignInScreen> {
   bool? showSpinner = false;
   final _auth = FirebaseAuth.instance;
   String? email;
@@ -33,23 +33,23 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = new TextEditingController();
   GoogleSignInAccount? _currentUser;
 
-  @override
-  login() {
-    googleSignIn.signIn();
-  }
+  // login() {
+  //   googleSignIn.signIn();
+  // }
+
   // createUserInFirestore() async {
-  //   login();
-  //   final GoogleSignInAccount user = googleSignIn.currentUser!;
-  //   DocumentSnapshot documentSnapshot = await usersRef.doc(user.id).get();
-  //     // 3) get username from create account, use it to make new user document in users collection
-  //     usersRef.doc(user.id).set({
-  //       "uid": user.id,
-  //       "username": user.displayName,
-  //       "photoUrl": user.photoUrl,
-  //       "email": user.email,
-  //     });
-  //   // documentSnapshot = await usersRef.doc(user.id).get();
-  //   }
+  // login();
+  // final GoogleSignInAccount user = googleSignIn.currentUser!;
+  // DocumentSnapshot documentSnapshot = await usersRef.doc(user.id).get();
+  // // 3) get username from create account, use it to make new user document in users collection
+  // usersRef.doc(user.id).set({
+  //   "uid": user.id,
+  //   "username": user.displayName,
+  //   "photoUrl": user.photoUrl,
+  //   "email": user.email,
+  // });
+  // documentSnapshot = await usersRef.doc(user.id).get();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -219,15 +219,17 @@ class _LoginState extends State<Login> {
                         }
                       },
                     ),
-                    // RoundeButton(
-                    //   title: 'Login with Google',
-                    //   color: Colors.lightBlue,
-                    //   onPressed: () {
-                    //       //  createUserInFirestore();
-                    //       // Navigator.pushNamed(context, NavbarScreen.id);
-                    //       // print(email);
-                    //   },
-                    // ),
+                    RoundeButton(
+                      title: 'Login with Google',
+                      color: Colors.lightBlue,
+                      onPressed: () {
+                        AuthenticationMethods().signInWithGoogle();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NavbarScreen()));
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -235,7 +237,7 @@ class _LoginState extends State<Login> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, Register.id);
+                    Navigator.pushNamed(context, SignUpScreen.id);
                   },
                   child: Container(
                     child: Text(

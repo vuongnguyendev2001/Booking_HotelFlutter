@@ -1,4 +1,4 @@
-class hotel_model {
+class HotelModel {
   String imageUrl;
   String nameHotel;
   String price;
@@ -8,7 +8,7 @@ class hotel_model {
   String address;
   String description;
 
-  hotel_model({
+  HotelModel({
     required this.imageUrl,
     required this.nameHotel,
     required this.price,

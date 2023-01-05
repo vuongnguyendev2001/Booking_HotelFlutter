@@ -11,16 +11,16 @@ import 'package:permission_handler/permission_handler.dart';
 import '../component/button.dart';
 import '../component/contrast.dart';
 import '../model/user_model.dart';
-import '../screens/login.dart';
+import 'sign_in_screen.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
   static const String id = 'register';
   @override
-  State<Register> createState() => _RegisterState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _RegisterState extends State<Register> {
+class _SignUpScreenState extends State<SignUpScreen> {
   String? imageUrl;
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
@@ -202,7 +202,7 @@ class _RegisterState extends State<Register> {
           signUp(emailEdittingController.text, passwordEdittingController.text);
           EasyLoading.showSuccess(
             'Đăng ký thành công!',
-            duration: Duration(milliseconds: 1300),
+            duration: const Duration(milliseconds: 1300),
             maskType: EasyLoadingMaskType.black,
           );
         });
@@ -334,12 +334,7 @@ class _RegisterState extends State<Register> {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-      'Đăng ký thành công !',
-      style: TextStyle(fontSize: 19),
-    )));
-    Navigator.pushNamed(context, Login.id);
+    Navigator.pushNamed(context, SignInScreen.id);
   }
 
   upLoadImage() async {

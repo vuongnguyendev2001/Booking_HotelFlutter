@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:app_booking/screens/login.dart';
-import 'package:app_booking/screens/myorder_Screen.dart';
+import 'package:app_booking/screens/order_screen.dart';
+import 'package:app_booking/screens/sign_in_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user_model.dart';
-import 'editprofile_screen.dart';
+import '../services/profile_management/editprofile_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -43,6 +43,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
   }
 
   String? admin = 'admin@email.com';
+
   @override
   Widget listTitle(
       {required IconData icon, required String title, required onPress}) {
@@ -75,7 +76,8 @@ class _AccountScreenStateState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var currentUser = loggedInUser.email;
+    Size screenSize = MediaQuery.of(context).size;
+    UserModel user = Provider.of<UserModel>(context).userDetails;
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBar(
@@ -93,11 +95,11 @@ class _AccountScreenStateState extends State<AccountScreen> {
             Column(
               children: [
                 Container(
-                  height: 100,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   color: Colors.blueGrey,
                 ),
                 Container(
-                  height: 580,
+                  height: MediaQuery.of(context).size.height,
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   decoration: BoxDecoration(
@@ -113,18 +115,19 @@ class _AccountScreenStateState extends State<AccountScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            width: 250,
+                            width: 240,
                             height: 80,
                             padding: EdgeInsets.only(bottom: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       '$name',
+                                      maxLines: 1,
                                       style: TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
@@ -134,10 +137,15 @@ class _AccountScreenStateState extends State<AccountScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      "$email",
-                                      style: TextStyle(
-                                        fontSize: 16,
+                                    SizedBox(
+                                      width: screenSize.width * 0.55,
+                                      child: Text(
+                                        "$email",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -164,8 +172,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            myorder_Screen()));
+                                        builder: (context) => OrderScreen()));
                               },
                               icon: FontAwesomeIcons.landmark,
                               title: "Lịch sử đặt phòng của user",
@@ -175,23 +182,17 @@ class _AccountScreenStateState extends State<AccountScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            myorder_Screen()));
+                                        builder: (context) => OrderScreen()));
                               },
                               icon: FontAwesomeIcons.landmark,
                               title: "Lịch sử đặt phòng",
                             ),
-                      // listTitle(
-                      //   onPress: (){},
-                      //   icon: FontAwesomeIcons.creditCard,
-                      //   title: "Thông tin thanh toán",
-                      // ),
                       listTitle(
                         onPress: () async {
                           final SharedPreferences sharedPreferences =
                               await SharedPreferences.getInstance();
                           sharedPreferences.remove('email');
-                          Navigator.pushNamed(context, Login.id);
+                          Navigator.pushNamed(context, SignInScreen.id);
                           EasyLoading.showSuccess(
                             'Đăng xuất thành công!',
                             duration: Duration(milliseconds: 1300),
@@ -199,7 +200,7 @@ class _AccountScreenStateState extends State<AccountScreen> {
                           );
                         },
                         icon: FontAwesomeIcons.rightFromBracket,
-                        title: "Log Out",
+                        title: "Đăng xuất",
                       ),
                     ],
                   ),
@@ -226,12 +227,12 @@ class _AccountScreenStateState extends State<AccountScreen> {
 
   uploadImage() async {
     final imagePicker = ImagePicker();
-    PickedFile? image;
+    XFile? image;
     UploadTask uploadTask;
     await Permission.photos.request();
     var permissionStatus = await Permission.photos.status;
     // if (permissionStatus.isGranted) {
-    image = await imagePicker.getImage(source: ImageSource.gallery);
+    image = await imagePicker.pickImage(source: ImageSource.gallery);
     var file = File(image!.path);
     if (image != null) {
       var snapshot = await FirebaseStorage.instance

@@ -1,22 +1,20 @@
+import 'package:app_booking/layout/layout_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-import '../screens/navbar.dart';
-
-class myorder_Screen extends StatefulWidget {
-  const myorder_Screen({Key? key}) : super(key: key);
+class OrderScreen extends StatefulWidget {
+  const OrderScreen({Key? key}) : super(key: key);
   static const String id = 'myorder_Screen';
   @override
-  State<myorder_Screen> createState() => _myorder_ScreenState();
+  State<OrderScreen> createState() => _OrderScreenState();
 }
 
 late User loggedInUser;
 
-class _myorder_ScreenState extends State<myorder_Screen> {
+class _OrderScreenState extends State<OrderScreen> {
   final _auth = FirebaseAuth.instance;
   final _booking = FirebaseFirestore.instance;
 
@@ -69,7 +67,7 @@ class _myorder_ScreenState extends State<myorder_Screen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NavbarScreen()));
+                            builder: (context) => const NavbarScreen()));
                   },
                   icon: Icon(FontAwesomeIcons.arrowLeft),
                 ),
@@ -104,7 +102,9 @@ class _myorder_ScreenState extends State<myorder_Screen> {
             itemBuilder: (context, index) {
               final DocumentSnapshot documentSnapshot =
                   document.data!.docs[index];
-              var price = int.parse(documentSnapshot['price']);
+              // final int price = NumberFormat.simpleCurrency(
+              // locale: 'vi-VN', decimalDigits: 0)
+              //     .format(documentSnapshot['price']);
               print(loggedInUser.email);
               var room = documentSnapshot['room'].toString();
               if (documentSnapshot['emailUser'] == loggedInUser.email ||
@@ -130,25 +130,33 @@ class _myorder_ScreenState extends State<myorder_Screen> {
                         ),
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(15),
                             bottomRight: Radius.circular(15)),
                         child: Container(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.35,
                           color: Colors.grey.shade400,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  documentSnapshot['nameHotel'],
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Vollkorn',
-                                  ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.hotel,
+                                      size: 23,
+                                    ),
+                                    Text(
+                                      '  ' + documentSnapshot['nameHotel'],
+                                      style: TextStyle(
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Vollkorn',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Text(
                                   documentSnapshot['nameRoom'],
@@ -160,9 +168,14 @@ class _myorder_ScreenState extends State<myorder_Screen> {
                                 ),
                                 Row(
                                   children: [
+                                    Icon(
+                                      FontAwesomeIcons.solidCalendarDays,
+                                      size: 20,
+                                    ),
                                     Text(
-                                      formattedDate(
-                                          documentSnapshot['startDate']),
+                                      ' : ' +
+                                          formattedDate(
+                                              documentSnapshot['startDate']),
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -195,20 +208,29 @@ class _myorder_ScreenState extends State<myorder_Screen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 3,
+                                ),
                                 Text(
-                                  'Địa chỉ: ' +
+                                  ' Địa chỉ: ' +
                                       documentSnapshot['addressHotel'],
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  maxLines: 2,
+                                ),
+                                SizedBox(
+                                  height: 3,
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
+                                    Icon(
+                                      FontAwesomeIcons.calendarDays,
+                                      size: 18,
+                                    ),
                                     Text(
-                                      'Ngày đặt: ' +
+                                      ' Ngày đặt : ' +
                                           formattedDatebook(
                                             documentSnapshot['DateTimebooking'],
                                           ),
@@ -219,28 +241,49 @@ class _myorder_ScreenState extends State<myorder_Screen> {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  'Người đặt: ' + documentSnapshot['emailUser'],
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.userTie,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      ' Người đặt : ' +
+                                          documentSnapshot['emailUser'],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
+                                    Icon(
+                                      FontAwesomeIcons.moneyBill,
+                                      size: 20,
+                                    ),
                                     Text(
-                                      'Tổng tiền: ',
+                                      '  Tổng tiền: ',
                                       style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                     Text(
-                                      'đ' '$price',
+                                      NumberFormat.simpleCurrency(
+                                              locale: 'vi-VN', decimalDigits: 0)
+                                          .format(documentSnapshot['price']),
                                       style: TextStyle(
                                         fontSize: 20,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ],

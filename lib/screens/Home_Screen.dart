@@ -1,6 +1,6 @@
 import 'package:app_booking/component/contrast.dart';
-import 'package:app_booking/screens/addFamousHotel.dart';
-import 'package:app_booking/screens/searchbar_Screen.dart';
+import 'package:app_booking/screens/search_bar_screen.dart';
+import 'package:app_booking/services/famousHotel_management/addFamousHotel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../component/app_large_text.dart';
 import '../component/text_app.dart';
-import 'editfamousHotel.dart';
+import '../services/famousHotel_management/editfamousHotel.dart';
+import 'destination_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -27,27 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   late User loggedInUser;
   int activeIndex = 0;
-  List images = [
-    "img.png",
-    "img_2.png",
-    "img_1.png",
-  ];
-  List textName = [
-    "Bà Nà Hills",
-    "Bãi Sao",
-    "Thành phố mộng mơ",
-  ];
-  List textAddress = [
-    "Đà Nẵng",
-    "Phú Quốc",
-    "Đà Lạt",
-  ];
-  List textDiscription = [
-    "Với kiến trúc thời Pháp thuộc địa, đặc biệt là Cầu Vàng huyền"
-        " thoại xuất hiện trên khắp mặt báo quốc tế.",
-    "Bãi biển với bờ cát trắng mịn dài, nước trong màu xanh ngọc ở Phú Quốc",
-    "Với khí hậu trong lành, mát mẻ quanh năm, Đà Lạt là 1 điểm du lịch lý tưởng không thể bỏ qua trong bất kể các mùa trong năm.",
-  ];
+
   ScrollController controller = ScrollController();
   bool closeTopContainer = false;
   @override
@@ -80,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await _famousHotel.doc(hotelID).delete();
     EasyLoading.showSuccess(
       'Xóa thành công!',
-      duration: Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 1300),
       maskType: EasyLoadingMaskType.black,
     );
   }
@@ -126,111 +108,105 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Stack(
               children: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: width,
-                  height: closeTopContainer ? 0 : height * 0.45,
-                  child: CarouselSlider.builder(
-                      itemCount: images.length,
-                      itemBuilder: (_, index, realIndex) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(25),
-                                  bottomLeft: Radius.circular(25)),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  "lib/asset/images_welcome/" + images[index],
-                                ),
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black45, BlendMode.darken),
-                              )),
-                          child: Container(
-                            alignment: Alignment.bottomLeft,
-                            padding:
-                                EdgeInsets.only(top: 270, left: 20, right: 20),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    AppLargeText(
-                                      text: textName[index],
-                                      color: Colors.white,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          FontAwesomeIcons.locationArrow,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        AppText(
-                                          text: textAddress[index],
-                                          color: Colors.white70,
-                                          size: 25,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                CarouselSlider.builder(
+                    itemCount: images.length,
+                    itemBuilder: (_, index, realIndex) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                bottomRight: Radius.circular(25),
+                                bottomLeft: Radius.circular(25)),
+                            image: DecorationImage(
+                              image: AssetImage(
+                                "lib/asset/images_welcome/" + images[index],
+                              ),
+                              fit: BoxFit.cover,
+                              colorFilter: const ColorFilter.mode(
+                                  Colors.black45, BlendMode.darken),
+                            )),
+                        child: Container(
+                          alignment: Alignment.bottomLeft,
+                          padding: const EdgeInsets.only(
+                              top: 270, left: 20, right: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AppLargeText(
+                                    text: textName[index],
+                                    color: Colors.white,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        FontAwesomeIcons.locationArrow,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      AppText(
+                                        text: textAddress[index],
+                                        color: Colors.white70,
+                                        size: 25,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      options: CarouselOptions(
-                          enlargeCenterPage: true,
-                          initialPage: 0,
-                          height: 430,
-                          viewportFraction: 1,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 4),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              activeIndex = index;
-                            });
-                          })),
-                ),
+                        ),
+                      );
+                    },
+                    options: CarouselOptions(
+                        enlargeCenterPage: true,
+                        initialPage: 0,
+                        height: 430,
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 4),
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            activeIndex = index;
+                          });
+                        })),
                 Padding(
                   padding: const EdgeInsets.only(top: 340, left: 330),
-                  child: Container(
-                    child: AnimatedSmoothIndicator(
-                      activeIndex: activeIndex,
-                      count: images.length,
-                      effect: WormEffect(),
-                    ),
+                  child: AnimatedSmoothIndicator(
+                    activeIndex: activeIndex,
+                    count: images.length,
+                    effect: const WormEffect(),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 90, left: 20, right: 20),
                   child: TextField(
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
                     ),
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SearchScreen())),
+                            builder: (context) => SearchBarScreen())),
                     decoration: kTextFieldDecoration.copyWith(
                       fillColor: Colors.white70,
                       contentPadding:
-                          EdgeInsetsDirectional.fromSTEB(16, 18, 0, 18),
-                      prefixIcon: Icon(
+                          const EdgeInsetsDirectional.fromSTEB(16, 18, 0, 18),
+                      prefixIcon: const Icon(
                         FontAwesomeIcons.search,
                         color: Colors.green,
                       ),
-                      hintText: 'Tìm khách sạn, nhà nghỉ...',
-                      hintStyle: TextStyle(color: Colors.black, fontSize: 20),
+                      hintText: 'Tìm thành phố...',
+                      hintStyle:
+                          const TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
                 ),
@@ -243,8 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
                         child: Text(
                           'Khách sạn nổi bật',
                           style: TextStyle(
@@ -270,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child: Text(
+                                  child: const Text(
                                     'Thêm Hotel',
                                     style: TextStyle(
                                       color: Colors.black,
@@ -281,9 +257,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 15, bottom: 10),
+                          : const Padding(
+                              padding: EdgeInsets.only(right: 15, bottom: 10),
                               child: Text(
                                 'Xem tất cả',
                                 style: TextStyle(
@@ -295,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     height: 350,
                     child: StreamBuilder(
                       stream: _famousHotel.snapshots(),
@@ -303,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (!snapshot.hasData)
                           return SpinKitFadingCircle(
-                            duration: Duration(milliseconds: 2000),
+                            duration: const Duration(milliseconds: 2000),
                             itemBuilder: (BuildContext context, int index) {
                               return DecoratedBox(
                                 decoration: BoxDecoration(
@@ -320,17 +295,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             final DocumentSnapshot documentSnapshot =
                                 snapshot.data!.docs[index];
                             return GestureDetector(
-                              // onTap: () => Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => DestinationScreen(
-                              //       idCity: documentSnapshot.id,
-                              //       documentSnapshot: documentSnapshot,
-                              //     ),
-                              //   ),
-                              // ),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DestinationScreen(
+                                    idCity: documentSnapshot.id,
+                                    documentSnapshot: documentSnapshot,
+                                    idHotel: documentSnapshot.id,
+                                  ),
+                                ),
+                              ),
                               child: Container(
-                                margin: EdgeInsets.only(left: 10, right: 15),
+                                margin:
+                                    const EdgeInsets.only(left: 10, right: 15),
                                 width: 230,
                                 child: Stack(
                                   alignment: Alignment.topCenter,
@@ -345,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Colors.blueGrey.shade200,
                                         ),
                                         child: Padding(
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left: 10, bottom: 8),
                                           child: Column(
                                             mainAxisAlignment:
@@ -355,19 +332,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               Text(
                                                 documentSnapshot['nameHotel'],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w600,
                                                   letterSpacing: 0.8,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 5,
                                               ),
                                               Text(
-                                                'Từ VND ' +
-                                                    documentSnapshot['price'],
-                                                style: TextStyle(
+                                                'Từ ' +
+                                                    NumberFormat.simpleCurrency(
+                                                            locale: 'vi-VN',
+                                                            decimalDigits: 0)
+                                                        .format(
+                                                            documentSnapshot[
+                                                                'price']),
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 18,
                                                 ),
@@ -378,21 +360,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     'Nhận: ' +
                                                         documentSnapshot[
                                                             'checkIn'],
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 10,
                                                   ),
                                                   Text(
                                                     'Trả: ' +
                                                         documentSnapshot[
                                                             'checkOut'],
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 18,
                                                       fontWeight:
@@ -412,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             color: Colors.black26,
                                             offset: Offset(0.0, 0.2),
                                             blurRadius: 6.0,
@@ -433,9 +415,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         'imageUrl'],
                                                   ),
                                                   fit: BoxFit.cover,
-                                                  colorFilter: ColorFilter.mode(
-                                                      Colors.black26,
-                                                      BlendMode.darken),
+                                                  colorFilter:
+                                                      const ColorFilter.mode(
+                                                          Colors.black26,
+                                                          BlendMode.darken),
                                                 )),
                                           ),
                                           currentuser == admin
@@ -451,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 documentSnapshot),
                                                       ),
                                                     ),
-                                                    child: CircleAvatar(
+                                                    child: const CircleAvatar(
                                                       backgroundColor:
                                                           Colors.grey,
                                                       child: Icon(
@@ -461,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           currentuser == admin
                                               ? Positioned(
                                                   top: 3,
@@ -474,7 +457,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             return CupertinoAlertDialog(
                                                               // backgroundColor: Colors.grey.shade100,
                                                               // title: Text('Thông báo'),
-                                                              content: Text(
+                                                              content:
+                                                                  const Text(
                                                                 'Bạn chắc chắn xóa chứ ?',
                                                                 style:
                                                                     TextStyle(
@@ -489,8 +473,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             context)
                                                                         .pop();
                                                                   },
-                                                                  child: Text(
-                                                                      'Hủy'),
+                                                                  child:
+                                                                      const Text(
+                                                                          'Hủy'),
                                                                 ),
                                                                 MaterialButton(
                                                                   onPressed:
@@ -501,14 +486,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     Navigator.pop(
                                                                         context);
                                                                   },
-                                                                  child: Text(
+                                                                  child: const Text(
                                                                       'Đồng ý'),
                                                                 ),
                                                               ],
                                                             );
                                                           });
                                                     },
-                                                    child: CircleAvatar(
+                                                    child: const CircleAvatar(
                                                       backgroundColor:
                                                           Colors.grey,
                                                       child: Icon(
@@ -518,7 +503,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                   ),
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           // ):  Positioned(
                                           //   right: 3,
                                           //   child: IconButton(
@@ -538,18 +523,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   FontAwesomeIcons
                                                       .locationArrow,
                                                   size: 22,
                                                   color: Colors.white,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
                                                   documentSnapshot['nameCity'],
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20,
                                                       fontWeight:

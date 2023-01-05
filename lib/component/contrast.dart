@@ -37,3 +37,24 @@ const kTextFieldDecoration = InputDecoration(
   ),
   filled: true,
 );
+List images = [
+    "img.png",
+    "img_2.png",
+    "img_1.png",
+  ];
+  List textName = [
+    "Bà Nà Hills",
+    "Bãi Sao",
+    "Thành phố mộng mơ",
+  ];
+  List textAddress = [
+    "Đà Nẵng",
+    "Phú Quốc",
+    "Đà Lạt",
+  ];
+  List textDiscription = [
+    "Với kiến trúc thời Pháp thuộc địa, đặc biệt là Cầu Vàng huyền"
+        " thoại xuất hiện trên khắp mặt báo quốc tế.",
+    "Bãi biển với bờ cát trắng mịn dài, nước trong màu xanh ngọc ở Phú Quốc",
+    "Với khí hậu trong lành, mát mẻ quanh năm, Đà Lạt là 1 điểm du lịch lý tưởng không thể bỏ qua trong bất kể các mùa trong năm.",
+  ];

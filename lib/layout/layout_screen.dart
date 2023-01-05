@@ -1,6 +1,6 @@
-import 'package:app_booking/screens/Home_Screen.dart';
+import 'package:app_booking/screens/home_screen.dart';
 import 'package:app_booking/screens/account_screen.dart';
-import 'package:app_booking/screens/all_City.dart';
+import 'package:app_booking/services/city_management/all_City.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-import 'booknow_Screen.dart';
+import 'book_now_screen.dart';
 
 final _activities = FirebaseFirestore.instance;
 late User loggedInUser;
@@ -134,306 +135,11 @@ class _DestinationScreenState extends State<DestinationScreen> {
                             ),
                           ],
                         ),
-                        // GestureDetector(
-                        //   onTap: (){
-                        //     showDialog(context: context,
-                        //       builder: (context) => AlertDialog(
-                        //         contentPadding: EdgeInsets.only(top: 30, left: 20, bottom: 10, right: 20),
-                        //         content: Text('Bạn muốn đặt tour cho $_count người?',style: TextStyle(
-                        //           fontSize: 20,
-                        //           fontWeight: FontWeight.w600,
-                        //         ),),
-                        //         actions: [
-                        //           // FlatButton(onPressed: (){
-                        //           //   Navigator.pop(context);
-                        //           //   },
-                        //           //     child: Text('HỦY', style: TextStyle(
-                        //           //       fontSize: 16,
-                        //           //     ),)),
-                        //           // FlatButton(
-                        //           //     onPressed: (){
-                        //           //       Booktour();
-                        //           //       Navigator.pop(context);
-                        //           //     },
-                        //           //     child: Text('ĐỒNG Ý', style: TextStyle(
-                        //           //         fontSize: 16,
-                        //           //     ),)),
-                        //         ],
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: Padding(
-                        //     padding:  EdgeInsets.only(bottom: 30),
-                        //     child: Container(
-                        //       alignment: Alignment.center,
-                        //       height: 35,
-                        //       width: 150,
-                        //       decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(10),
-                        //         color: Colors.white54,
-                        //       ),
-                        //       child: Text('ĐẶT TOUR', style: TextStyle(
-                        //         fontSize: 22,
-                        //         fontWeight: FontWeight.w900,
-                        //       ),)
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   right: 35,
-                  //   bottom: 4,
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Text('SL:', style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontSize: 18
-                  //       ),),
-                  //       SizedBox(width: 10,),
-                  //       CircleAvatar(
-                  //         radius: 13,
-                  //         child: FloatingActionButton(
-                  //           onPressed: _decrementCount,
-                  //           child: Icon(Icons.remove),
-                  //           backgroundColor: Colors.black38,
-                  //         ),
-                  //       ),
-                  //       SizedBox(width: 5,),
-                  //       Text('$_count', style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontSize: 18
-                  //       ),),
-                  //       SizedBox(width: 5,),
-                  //       CircleAvatar(
-                  //         radius: 13,
-                  //         child: FloatingActionButton(
-                  //           onPressed: _incrementCount,
-                  //             child: Icon(Icons.add),
-                  //           backgroundColor: Colors.black38,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
-              // Expanded(
-              //   child: StreamBuilder(
-              //     stream: _activities.collection('DaNang').snapshots(),
-              //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
-              //       if(!snapshot.hasData) return Text('error');
-              //       return ListView.builder(
-              //           padding: EdgeInsets.only(top: 10, bottom: 10),
-              //           itemCount: snapshot.data!.docs.length,
-              //           itemBuilder: (BuildContext context, int index) {
-              //             DocumentSnapshot document = snapshot.data!.docs[index];
-              //             return Stack(
-              //               children: [
-              //                 Container(
-              //                   margin: EdgeInsets.fromLTRB(10, 5, 15, 5),
-              //                   height: 170,
-              //                   width: double.infinity,
-              //                   decoration: BoxDecoration(
-              //                     borderRadius: BorderRadius.circular(10),
-              //                     color: Colors.white,
-              //                   ),
-              //                   child: Padding(
-              //                     padding: const EdgeInsets.fromLTRB(130, 20, 20, 20),
-              //                     child: Column(
-              //                       mainAxisAlignment: MainAxisAlignment.center,
-              //                       crossAxisAlignment: CrossAxisAlignment.start,
-              //                       children: [
-              //                         Row(
-              //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //                           crossAxisAlignment: CrossAxisAlignment.start,
-              //                           children: [
-              //                             Container(
-              //                               width: 120,
-              //                               child: Text(document['name'], style: TextStyle(
-              //                                 fontWeight: FontWeight.w600,
-              //                                 fontSize: 18,
-              //                               ),),
-              //                             ),
-              //                             Column(
-              //                               children: [
-              //                                 Text(
-              //                                   document['price'], style: TextStyle(
-              //                                   fontSize: 22.0,
-              //                                   fontWeight: FontWeight.w600,
-              //                                 ),),
-              //                                 Text('1 khách', style: TextStyle(
-              //                                     color: Colors.grey
-              //                                 ),),
-              //                               ],
-              //                             ),
-              //                           ],
-              //                         ),
-              //                         Text(document['type'], style: TextStyle(
-              //                           color: Colors.grey,
-              //                           fontSize: 16,
-              //                         ),),
-              //                         SizedBox(height: 10,),
-              //                         Row(
-              //                           children: [
-              //                             Container(
-              //                               padding: EdgeInsets.all(5),
-              //                               width: 70,
-              //                               decoration: BoxDecoration(
-              //                                 color: Colors.blueGrey.shade200,
-              //                                 borderRadius: BorderRadius.circular(10),
-              //                               ),
-              //                               alignment: Alignment.center,
-              //                               child: Text(''
-              //                                 // activity.startTimes[0],
-              //                               ),
-              //                             ),
-              //                             SizedBox(width: 10,),
-              //                             Container(
-              //                               padding: EdgeInsets.all(5),
-              //                               width: 70,
-              //                               decoration: BoxDecoration(
-              //                                 color: Colors.blueGrey.shade200,
-              //                                 borderRadius: BorderRadius.circular(10),
-              //                               ),
-              //                               alignment: Alignment.center,
-              //                               child: Text(''
-              //                                 // activity.startTimes[1],
-              //                               ),
-              //                             ),
-              //                           ],
-              //                         )
-              //                       ],
-              //                     ),
-              //                   ),
-              //                 ),
-              //                 Positioned(
-              //                   left: 15, top: 15, bottom: 15,
-              //                   child: ClipRRect(
-              //                     borderRadius: BorderRadius.circular(20),
-              //                     child: Image(
-              //                       width: 110,
-              //                       image: AssetImage(document['imageUrl']),
-              //                       fit: BoxFit.cover,
-              //                     ),
-              //                   ),
-              //                 )
-              //               ],
-              //             );
-              //           }
-              //       );
-              //     }
-              //   ),
-              // ),
-              // Expanded(
-              //   child: StreamBuilder(
-              //       stream: _activities.collection('DaNang').snapshots(),
-              //       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
-              //         if(!snapshot.hasData) return Text('error');
-              //         return ListView.builder(
-              //             padding: EdgeInsets.only(top: 10, bottom: 10),
-              //             itemCount: snapshot.data!.docs.length,
-              //             itemBuilder: (BuildContext context, int index) {
-              //               DocumentSnapshot document = snapshot.data!.docs[index];
-              //               return Stack(
-              //                 children: [
-              //                   Container(
-              //                     margin: EdgeInsets.fromLTRB(10, 5, 15, 5),
-              //                     height: 170,
-              //                     width: double.infinity,
-              //                     decoration: BoxDecoration(
-              //                       borderRadius: BorderRadius.circular(10),
-              //                       color: Colors.white,
-              //                     ),
-              //                     child: Padding(
-              //                       padding: const EdgeInsets.fromLTRB(130, 20, 20, 20),
-              //                       child: Column(
-              //                         mainAxisAlignment: MainAxisAlignment.center,
-              //                         crossAxisAlignment: CrossAxisAlignment.start,
-              //                         children: [
-              //                           Row(
-              //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //                             crossAxisAlignment: CrossAxisAlignment.start,
-              //                             children: [
-              //                               Container(
-              //                                 width: 120,
-              //                                 child: Text(document['name'], style: TextStyle(
-              //                                   fontWeight: FontWeight.w600,
-              //                                   fontSize: 18,
-              //                                 ),),
-              //                               ),
-              //                               Column(
-              //                                 children: [
-              //                                   Text(
-              //                                     document['price'], style: TextStyle(
-              //                                     fontSize: 22.0,
-              //                                     fontWeight: FontWeight.w600,
-              //                                   ),),
-              //                                   Text('1 khách', style: TextStyle(
-              //                                       color: Colors.grey
-              //                                   ),),
-              //                                 ],
-              //                               ),
-              //                             ],
-              //                           ),
-              //                           Text(document['type'], style: TextStyle(
-              //                             color: Colors.grey,
-              //                             fontSize: 16,
-              //                           ),),
-              //                           SizedBox(height: 10,),
-              //                           Row(
-              //                             children: [
-              //                               Container(
-              //                                 padding: EdgeInsets.all(5),
-              //                                 width: 70,
-              //                                 decoration: BoxDecoration(
-              //                                   color: Colors.blueGrey.shade200,
-              //                                   borderRadius: BorderRadius.circular(10),
-              //                                 ),
-              //                                 alignment: Alignment.center,
-              //                                 child: Text(''
-              //                                   // activity.startTimes[0],
-              //                                 ),
-              //                               ),
-              //                               SizedBox(width: 10,),
-              //                               Container(
-              //                                 padding: EdgeInsets.all(5),
-              //                                 width: 70,
-              //                                 decoration: BoxDecoration(
-              //                                   color: Colors.blueGrey.shade200,
-              //                                   borderRadius: BorderRadius.circular(10),
-              //                                 ),
-              //                                 alignment: Alignment.center,
-              //                                 child: Text(''
-              //                                   // activity.startTimes[1],
-              //                                 ),
-              //                               ),
-              //                             ],
-              //                           )
-              //                         ],
-              //                       ),
-              //                     ),
-              //                   ),
-              //                   Positioned(
-              //                     left: 15, top: 15, bottom: 15,
-              //                     child: ClipRRect(
-              //                       borderRadius: BorderRadius.circular(20),
-              //                       child: Image(
-              //                         width: 110,
-              //                         image: AssetImage(document['imageUrl']),
-              //                         fit: BoxFit.cover,
-              //                       ),
-              //                     ),
-              //                   )
-              //                 ],
-              //               );
-              //             }
-              //         );
-              //       }
-              //   ),
-              // ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
@@ -449,32 +155,63 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.documentSnapshot['nameHotel'],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.8,
-                            fontFamily: 'Vollkorn',
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.hotel,
+                              size: 22,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              widget.documentSnapshot['nameHotel'],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.8,
+                                fontFamily: 'Vollkorn',
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          widget.documentSnapshot['price'] + 'đ/đêm',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.8),
+                        Row(
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.moneyBill,
+                              size: 21,
+                            ),
+                            Text(
+                              ' ' +
+                                  NumberFormat.simpleCurrency(
+                                          locale: 'vi-VN', decimalDigits: 0)
+                                      .format(
+                                          widget.documentSnapshot['price']) +
+                                  '/ đêm',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.8),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: [
+                            Icon(
+                              FontAwesomeIcons.calendarDays,
+                              size: 19,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
                             Text(
                               'Nhận phòng: ' +
                                   widget.documentSnapshot['checkIn'],
@@ -486,6 +223,13 @@ class _DestinationScreenState extends State<DestinationScreen> {
                             ),
                             SizedBox(
                               width: 10,
+                            ),
+                            Icon(
+                              FontAwesomeIcons.calendarDays,
+                              size: 19,
+                            ),
+                            SizedBox(
+                              width: 5,
                             ),
                             Text(
                               'Trả phòng: ' +
@@ -533,7 +277,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => booknow_Screen(
+                  builder: (context) => BookNowScreen(
                       idCity: widget.idCity,
                       idHotel: widget.idHotel,
                       documentSnapshot: widget.documentSnapshot),
