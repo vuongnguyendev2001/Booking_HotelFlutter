@@ -1,7 +1,11 @@
 import 'package:app_booking/layout/layout_screen.dart';
+import 'package:app_booking/layout/navbar_admin_screen.dart';
 import 'package:app_booking/screens/account_screen.dart';
+import 'package:app_booking/screens/admin_screen/list_location/location_screen.dart';
+import 'package:app_booking/screens/admin_screen/list_user/list_user_screen.dart';
+import 'package:app_booking/screens/chat_home/chat_home_screen.dart';
 import 'package:app_booking/screens/home_screen.dart';
-import 'package:app_booking/screens/order_screen.dart';
+import 'package:app_booking/screens/order_hotel_screen.dart';
 import 'package:app_booking/screens/sign_in_screen.dart';
 import 'package:app_booking/screens/splash_screen.dart';
 import 'package:app_booking/screens/welcome_screen.dart';
@@ -31,13 +35,17 @@ class MyApp extends StatelessWidget {
         WelcomeScreenn.id: (context) => const WelcomeScreenn(),
         SignInScreen.id: (context) => const SignInScreen(),
         SignUpScreen.id: (context) => const SignUpScreen(),
-        SplashScreen.id: (context) => SplashScreen(),
-        location_Screen.id: (context) => location_Screen(),
-        NavbarScreen.id: (context) => NavbarScreen(),
-        AccountScreen.id: (context) => AccountScreen(),
-        addfamousHotel_Screen.id: (context) => addfamousHotel_Screen(),
+        SplashScreen.id: (context) => const SplashScreen(),
+        location_Screen.id: (context) => const location_Screen(),
+        NavbarScreen.id: (context) => const NavbarScreen(),
+        NavbarAdminScreen.id: (context) => const NavbarAdminScreen(),
+        AccountScreen.id: (context) => const AccountScreen(),
+        addfamousHotel_Screen.id: (context) => const addfamousHotel_Screen(),
         HomeScreen.id: (context) => HomeScreen(),
-        OrderScreen.id: (context) => OrderScreen(),
+        OrderHotelScreen.id: (context) => const OrderHotelScreen(),
+        chatHomePage.id: (context) => const chatHomePage(),
+        LocationScreen.id: (context) => const LocationScreen(),
+        ListUserScreen.id: (context) => const ListUserScreen(),
       },
     );
   }

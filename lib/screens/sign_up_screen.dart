@@ -247,7 +247,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             alignment: Alignment.bottomRight,
                             child: GestureDetector(
                               onTap: upLoadImage,
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 backgroundColor: Colors.blueGrey,
                                 child: Icon(
                                   Icons.edit,

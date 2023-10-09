@@ -1,5 +1,8 @@
+import 'package:app_booking/component/currency_formatter.dart';
 import 'package:app_booking/screens/destination_screen.dart';
+import 'package:app_booking/screens/search_location_screen.dart';
 import 'package:app_booking/services/hotel_management/addHotel_Screen.dart';
+import 'package:app_booking/services/hotel_management/search_hotel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +59,10 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
     );
   }
 
+  bool isDense = false;
+  List<String> sortOptions = ['price'];
+
+  List<String> selectedOptions = [];
   ScrollController controller = ScrollController();
   bool closeTopContainer = false;
   @override
@@ -73,29 +80,155 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
           children: [
             Center(
                 child: Text(
-              'Khách sạn tại ' + widget.documentSnapshot!['nameCity'],
+              'Danh sách khách sạn',
               style: TextStyle(
                 color: Colors.blueGrey.shade800,
                 fontFamily: 'Vollkorn',
-                fontSize: 20,
+                fontSize: 18,
               ),
             )),
             currentuser == admin
-                ? GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => addHotel_Screen(
-                                    documentSnapshot: widget.documentSnapshot,
-                                  )));
-                    },
-                    child: Icon(
-                      FontAwesomeIcons.circlePlus,
-                      color: Colors.blueGrey.shade800,
-                      size: 30,
-                    ))
-                : SizedBox(),
+                ? Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => addHotel_Screen(
+                                          documentSnapshot:
+                                              widget.documentSnapshot,
+                                        )));
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.circlePlus,
+                            color: Colors.blueGrey.shade800,
+                            size: 30,
+                          )),
+                      const SizedBox(width: 6),
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (builder) {
+                                    return Column(
+                                      children: [
+                                        CheckboxListTile(
+                                            title: const Text(
+                                                'Tìm kiếm theo giá cao -> thấp'),
+                                            value: isDense,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                isDense = value!;
+                                              });
+                                              Navigator.pop(context);
+                                            }),
+                                        CheckboxListTile(
+                                            title: const Text(
+                                                'Tìm kiếm theo giá thấp -> cao'),
+                                            value: !isDense,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                isDense = !value!;
+                                              });
+                                              Navigator.pop(context);
+                                            }),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                Icons.filter_list,
+                                color: Colors.blueGrey.shade800,
+                                size: 30,
+                              )),
+                          const SizedBox(width: 6),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SearchHotelScreen(
+                                              idCity: widget.idCity,
+                                              nameLocation:
+                                                  widget.documentSnapshot![
+                                                      'nameCity'],
+                                              documentHotel:
+                                                  widget.documentSnapshot,
+                                            )));
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.search,
+                                color: Colors.blueGrey.shade800,
+                                size: 25,
+                              )),
+                        ],
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (builder) {
+                                return Column(
+                                  children: [
+                                    CheckboxListTile(
+                                        title: const Text(
+                                            'Tìm kiếm theo giá cao -> thấp'),
+                                        value: isDense,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isDense = value!;
+                                          });
+                                          Navigator.pop(context);
+                                        }),
+                                    CheckboxListTile(
+                                        title: const Text(
+                                            'Tìm kiếm theo giá thấp -> cao'),
+                                        value: !isDense,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isDense = !value!;
+                                          });
+                                          Navigator.pop(context);
+                                        }),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Icon(
+                            Icons.filter_list,
+                            color: Colors.blueGrey.shade800,
+                            size: 30,
+                          )),
+                      const SizedBox(width: 6),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchHotelScreen(
+                                          idCity: widget.idCity,
+                                          nameLocation: widget
+                                              .documentSnapshot!['nameCity'],
+                                          documentHotel:
+                                              widget.documentSnapshot,
+                                        )));
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.search,
+                            color: Colors.blueGrey.shade800,
+                            size: 25,
+                          )),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -128,12 +261,19 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
                     Text(
                       widget.documentSnapshot!['nameCity'],
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 20,
                         color: Colors.white,
                         fontFamily: 'Vollkorn',
                       ),
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [],
                 ),
               ),
             ],
@@ -144,6 +284,7 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
                   .collection('allCity')
                   .doc(widget.documentSnapshot!.id)
                   .collection('allHotel')
+                  .orderBy('price', descending: isDense)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -170,9 +311,12 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DestinationScreen(
-                                      idHotel: document.id,
-                                      idCity: widget.documentSnapshot!.id,
-                                      documentSnapshot: document))),
+                                        idHotel: document.id,
+                                        idCity: widget.documentSnapshot!.id,
+                                        documentSnapshot: document,
+                                        nameLocation: widget
+                                            .documentSnapshot!['nameCity'],
+                                      ))),
                           child: Column(
                             children: [
                               StreamBuilder<Object>(
@@ -208,7 +352,7 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              editHotel_Screen(
+                                                              EditHotelScreen(
                                                                   document),
                                                         ),
                                                       ),
@@ -241,41 +385,35 @@ class _All_Hotel_ScreenState extends State<All_Hotel_Screen> {
                                     );
                                   }),
                               Container(
+                                padding: const EdgeInsets.all(10),
                                 width: width,
-                                height: width * 0.2,
                                 decoration: BoxDecoration(
                                   color: Colors.blueGrey.shade200,
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                       bottomRight: Radius.circular(15),
                                       bottomLeft: Radius.circular(15)),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        document['nameHotel'],
-                                        style: TextStyle(
-                                          fontSize: 27,
-                                          fontFamily: 'Vollkorn',
-                                        ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      document['nameHotel'],
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'Vollkorn',
                                       ),
-                                      Text(
-                                        'Giá từ ' +
-                                            NumberFormat.simpleCurrency(
-                                                    locale: 'vi-VN',
-                                                    decimalDigits: 0)
-                                                .format(document['price']),
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                    ),
+                                    Text(
+                                      'Giá từ ' +
+                                          CurrencyFormatter.convertPrice(
+                                              price: document['price']),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               )
                             ],

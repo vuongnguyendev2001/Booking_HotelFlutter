@@ -1,6 +1,8 @@
+import 'package:app_booking/component/contrast.dart';
+import 'package:app_booking/resources/cloudfirestore_methods.dart';
 import 'package:app_booking/screens/home_screen.dart';
 import 'package:app_booking/screens/account_screen.dart';
-import 'package:app_booking/services/city_management/all_City.dart';
+import 'package:app_booking/screens/all_city_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,16 +14,16 @@ class NavbarScreen extends StatefulWidget {
 }
 
 class _NavbarScreenState extends State<NavbarScreen> {
-  List pages = [
-    HomeScreen(),
-    all_City(),
-    AccountScreen(),
-  ];
   int currentIndex = 0;
   void onTap(int index) {
     setState(() {
       currentIndex = index;
     });
+  }
+
+  void initState() {
+    super.initState();
+    CloudFirestoreMethod().getAvatarNameandEmail();
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:app_booking/layout/layout_screen.dart';
+import 'package:app_booking/layout/navbar_admin_screen.dart';
 import 'package:app_booking/resources/authentication_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,8 +30,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final _auth = FirebaseAuth.instance;
   String? email;
   String? password;
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   GoogleSignInAccount? _currentUser;
 
   // login() {
@@ -72,13 +73,13 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(
+                const Flexible(
                   child: Center(
                     child: Text(
                       'CHÀO MỪNG BẠN TRỞ LẠI,',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 27,
+                        fontSize: 23,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Vollkorn',
                       ),
@@ -92,16 +93,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                       onChanged: (value) {
                         email = value;
                       },
                       decoration: kTextFieldDecoration.copyWith(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           FontAwesomeIcons.envelope,
                           color: Colors.white,
                         ),
@@ -115,15 +116,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       controller: passwordController,
                       obscureText: true,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                       onChanged: (value) {
                         password = value;
                       },
                       decoration: kTextFieldDecoration.copyWith(
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.lock,
                           color: Colors.white,
                         ),
@@ -134,49 +135,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         border: InputBorder.none,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.65,
-                      height: MediaQuery.of(context).size.width * 0.1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.shade600,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                              side: BorderSide(color: Colors.white),
-                              activeColor: Colors.blueGrey,
-                              checkColor: Colors.white,
-                              focusColor: Colors.white,
-                              value: showSpinner,
-                              onChanged: (value) {
-                                setState(() {
-                                  showSpinner = value;
-                                  print(showSpinner);
-                                });
-                              }),
-                          Text(
-                            'Nhớ thông tin đăng nhập',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          // Text('Quên mật khẩu',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.bold,
-                          //       color: Colors.white,
-                          //       fontSize: 18),),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
+                    const SizedBox(
+                      height: 30,
                     ),
                     RoundeButton(
                       title: 'Đăng nhập',
@@ -188,51 +151,51 @@ class _SignInScreenState extends State<SignInScreen> {
                         try {
                           final users = (await _auth.signInWithEmailAndPassword(
                               email: email!, password: password!));
-                          if (users != null && showSpinner == false) {
-                            Navigator.pushNamed(context, NavbarScreen.id);
-                            EasyLoading.showSuccess(
-                              'Đăng nhập thành công !',
-                              duration: Duration(milliseconds: 1300),
-                              maskType: EasyLoadingMaskType.black,
-                            );
-                          } else if (users != null && showSpinner == true) {
-                            SharedPreferences preferences =
-                                await SharedPreferences.getInstance();
-                            preferences.setString(
-                                'email', emailController.text);
-                            Navigator.pushNamed(context, NavbarScreen.id);
-                            EasyLoading.showSuccess(
-                              'Đăng nhập thành công !',
-                              duration: Duration(milliseconds: 1300),
-                              maskType: EasyLoadingMaskType.black,
-                            );
-                          }
-                          // setState(() async {
-                          //   showSpinner = false;
-                          // });
+
+                          EasyLoading.showSuccess(
+                            'Đăng nhập thành công !',
+                            duration: const Duration(milliseconds: 1300),
+                            maskType: EasyLoadingMaskType.black,
+                          );
+                          email == 'admin@email.com'
+                              ? Navigator.pushNamed(
+                                  context, NavbarAdminScreen.id)
+                              : Navigator.pushNamed(context, NavbarScreen.id);
+                          EasyLoading.showSuccess(
+                            'Đăng nhập thành công !',
+                            duration: const Duration(milliseconds: 1300),
+                            maskType: EasyLoadingMaskType.black,
+                          );
                         } catch (e) {
                           EasyLoading.showError(
                             'Sai tài khoản hoặc mật khẩu!',
-                            duration: Duration(milliseconds: 1300),
+                            duration: const Duration(milliseconds: 1300),
                             maskType: EasyLoadingMaskType.black,
                           );
                         }
                       },
                     ),
                     RoundeButton(
-                      title: 'Login with Google',
+                      title: 'Tiếp tục với Google',
                       color: Colors.lightBlue,
-                      onPressed: () {
-                        AuthenticationMethods().signInWithGoogle();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NavbarScreen()));
+                      onPressed: () async {
+                        await AuthenticationMethods().handleGoogleSignIn();
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NavbarScreen(),
+                          ),
+                        );
+                        await EasyLoading.showSuccess(
+                          'Đăng nhập thành công !',
+                          duration: const Duration(milliseconds: 1300),
+                          maskType: EasyLoadingMaskType.black,
+                        );
                       },
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 GestureDetector(
@@ -240,7 +203,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.pushNamed(context, SignUpScreen.id);
                   },
                   child: Container(
-                    child: Text(
+                    child: const Text(
                       'Tạo tài khoản mới',
                       style: TextStyle(
                         fontFamily: 'Vollkorn',
@@ -249,14 +212,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(width: 1, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
               ],

@@ -1,4 +1,6 @@
-import 'package:app_booking/screens/order_screen.dart';
+import 'package:app_booking/component/currency_formatter.dart';
+import 'package:app_booking/layout/tabbar_screen.dart';
+import 'package:app_booking/screens/order_hotel_screen.dart';
 import 'package:app_booking/services/room_management/addKindofRoom.dart';
 import 'package:app_booking/services/room_management/editKindofRoom.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,8 +73,6 @@ class _BookNowScreenState extends State<BookNowScreen> {
   int selectedBed = 0;
   @override
   Widget build(BuildContext context) {
-    String? selectedRole;
-    List Role = ['Sinh viên', 'Giảng viên', 'Kĩ thuật viên'];
     var currentuser = loggedInUser.email;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -90,15 +90,15 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(FontAwesomeIcons.arrowLeft),
+                  icon: const Icon(FontAwesomeIcons.arrowLeft),
                 ),
               ),
             ),
-            Text(
+            const Text(
               'ĐƠN ĐẶT PHÒNG',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -117,9 +117,9 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                       idHotel: widget.idHotel,
                                       idCity: widget.idCity)));
                         },
-                        icon: Icon(FontAwesomeIcons.plus),
+                        icon: const Icon(FontAwesomeIcons.plus),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
             ),
           ],
@@ -139,7 +139,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return CircularProgressIndicator();
+                if (!snapshot.hasData) return const CircularProgressIndicator();
                 return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -151,14 +151,14 @@ class _BookNowScreenState extends State<BookNowScreen> {
                       return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Container(
                               width: width,
                               height: width * 0.45,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(10),
                                       topRight: Radius.circular(10)),
                                   image: DecorationImage(
@@ -193,13 +193,13 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                                         BorderRadius.circular(
                                                             10),
                                                   ),
-                                                  child: Icon(
+                                                  child: const Icon(
                                                     FontAwesomeIcons.edit,
                                                     color: Colors.white,
                                                   )),
                                             )
-                                          : SizedBox(),
-                                      SizedBox(
+                                          : const SizedBox(),
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                     ],
@@ -207,37 +207,38 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     koroom['nameRoom'],
                                     style: TextStyle(
-                                        fontSize: 21,
+                                        fontSize: 18,
                                         color: Colors.blueAccent.shade700,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.bed_rounded,
-                                        size: 23,
+                                        size: 20,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Text(
                                         koroom['bedroom'],
-                                        style: TextStyle(
-                                            fontSize: 20,
+                                        style: const TextStyle(
+                                            fontSize: 17,
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -245,54 +246,55 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         FontAwesomeIcons.maximize,
-                                        size: 18,
+                                        size: 16,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Text(
                                         'Cỡ phòng: ' + koroom['area'],
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600),
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         FontAwesomeIcons.person,
                                         size: 18,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Text(
                                         'Dành cho: ' + koroom['size'],
-                                        style: TextStyle(
-                                            fontSize: 20,
+                                        style: const TextStyle(
+                                            fontSize: 17,
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 5,
+                                  const SizedBox(
+                                    height: 2,
                                   ),
                                   Text(
                                     koroom['description'],
-                                    style: TextStyle(
-                                        fontSize: 18,
+                                    style: const TextStyle(
+                                        fontSize: 17,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400),
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Container(
@@ -304,10 +306,11 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    'VND '
-                                    '${NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(koroom['price'])}',
-                                    style: TextStyle(
-                                        fontSize: 22,
+                                    CurrencyFormatter.convertPrice(
+                                            price: koroom['price'])
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontSize: 20,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -322,12 +325,12 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: TextButton(
-                                      child: Text(
+                                      child: const Text(
                                         "CHỌN PHÒNG",
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 21),
+                                            fontSize: 18),
                                       ),
                                       onPressed: () {
                                         Navigator.push(
@@ -348,7 +351,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                   ),
                                   //   ],
                                   // ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                 ],
@@ -378,10 +381,10 @@ class _BookNowScreenState extends State<BookNowScreen> {
       "imageUrl": widget.documentSnapshot['imageUrl'],
     });
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-        builder: (context) => OrderScreen(), maintainState: true));
+        builder: (context) => const TabBarScreen(), maintainState: true));
     EasyLoading.showSuccess(
       'Đặt phòng thành công!',
-      duration: Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 1300),
       maskType: EasyLoadingMaskType.black,
     );
   }

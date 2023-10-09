@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_booking/component/currency_formatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +17,14 @@ class DestinationScreen extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
   final String idCity;
   final String idHotel;
-  DestinationScreen(
-      {required this.documentSnapshot,
-      required this.idCity,
-      required this.idHotel});
+  final String nameLocation;
+  DestinationScreen({
+    Key? key,
+    required this.documentSnapshot,
+    required this.idCity,
+    required this.idHotel,
+    required this.nameLocation,
+  }) : super(key: key);
   @override
   State<DestinationScreen> createState() => _DestinationScreenState();
 }
@@ -32,7 +37,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
       RoundedLoadingButtonController();
 
   void _doSomething() async {
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       _btnController.success();
     });
   }
@@ -68,7 +73,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
-                        BoxShadow(
+                        const BoxShadow(
                           color: Colors.black26,
                           offset: Offset(0.2, 2.0),
                           blurRadius: 6.0,
@@ -77,19 +82,20 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     ),
                     child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(25),
                                 bottomRight: Radius.circular(25)),
                             image: DecorationImage(
                               image: NetworkImage(
                                   widget.documentSnapshot['imageUrl']),
-                              colorFilter: ColorFilter.mode(
+                              colorFilter: const ColorFilter.mode(
                                   Colors.black45, BlendMode.darken),
                               fit: BoxFit.cover,
                             ))),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 42),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 42),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -98,7 +104,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                           backgroundColor: Colors.white24,
                           child: IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: Icon(
+                            icon: const Icon(
                               FontAwesomeIcons.angleLeft,
                               color: Colors.white,
                             ),
@@ -117,19 +123,19 @@ class _DestinationScreenState extends State<DestinationScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               FontAwesomeIcons.locationArrow,
                               size: 25,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Text(
-                              widget.documentSnapshot['nameCity'],
-                              style: TextStyle(
+                              widget.nameLocation,
+                              style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 25,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.8),
                             ),
@@ -157,18 +163,18 @@ class _DestinationScreenState extends State<DestinationScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               FontAwesomeIcons.hotel,
                               size: 22,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Text(
                               widget.documentSnapshot['nameHotel'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
-                                fontSize: 24,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.8,
                                 fontFamily: 'Vollkorn',
@@ -176,7 +182,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Row(
@@ -187,54 +193,52 @@ class _DestinationScreenState extends State<DestinationScreen> {
                             ),
                             Text(
                               ' ' +
-                                  NumberFormat.simpleCurrency(
-                                          locale: 'vi-VN', decimalDigits: 0)
-                                      .format(
-                                          widget.documentSnapshot['price']) +
+                                  CurrencyFormatter.convertPrice(
+                                      price: widget.documentSnapshot['price']) +
                                   '/ đêm',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.8),
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               FontAwesomeIcons.calendarDays,
                               size: 19,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Text(
                               'Nhận phòng: ' +
                                   widget.documentSnapshot['checkIn'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Icon(
+                            const Icon(
                               FontAwesomeIcons.calendarDays,
                               size: 19,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Text(
                               'Trả phòng: ' +
                                   widget.documentSnapshot['checkOut'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -242,23 +246,23 @@ class _DestinationScreenState extends State<DestinationScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(
                           'Địa chỉ: ' + widget.documentSnapshot['address'],
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.4),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(
                           'Mô tả: ' + widget.documentSnapshot['description'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -286,9 +290,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
             },
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.065,
               color: Colors.blueGrey,
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
                 child: Center(
                   child: Text(
@@ -296,7 +300,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 20,
                       fontFamily: 'Vollkorn',
                     ),
                   ),

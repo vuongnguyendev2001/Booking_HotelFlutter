@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app_booking/screens/order_screen.dart';
+import 'package:app_booking/layout/tabbar_screen.dart';
 import 'package:app_booking/screens/sign_in_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../model/user_model.dart';
 import '../services/profile_management/editprofile_screen.dart';
@@ -34,10 +34,12 @@ class _AccountScreenStateState extends State<AccountScreen> {
         .get()
         .then((value) {
       loggedInUser = UserModel.fromMap(value.data());
-      setState(() {
-        avatarUser = loggedInUser.avatar;
-        name = loggedInUser.userName;
-        email = loggedInUser.email;
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          avatarUser = loggedInUser.avatar ?? '';
+          name = loggedInUser.userName ?? '';
+          email = loggedInUser.email ?? '';
+        });
       });
     });
   }
@@ -63,10 +65,10 @@ class _AccountScreenStateState extends State<AccountScreen> {
               ),
               title: Text(
                 title,
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
               onTap: onPress,
-              trailing: Icon(Icons.arrow_forward_ios),
+              trailing: const Icon(Icons.arrow_forward_ios),
             ),
           ),
         ),
@@ -77,13 +79,16 @@ class _AccountScreenStateState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    UserModel user = Provider.of<UserModel>(context).userDetails;
+    var currentUser = loggedInUser;
+    // UserModel user = Provider.of<UserModel>(context).userDetails;
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
-        title: Text(
-          "My profile",
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          "Thông tin",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -101,8 +106,9 @@ class _AccountScreenStateState extends State<AccountScreen> {
                 Container(
                   height: MediaQuery.of(context).size.height,
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: const BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
@@ -115,39 +121,110 @@ class _AccountScreenStateState extends State<AccountScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            width: 240,
-                            height: 80,
-                            padding: EdgeInsets.only(bottom: 10),
+                            // width: double.infinity,
+                            // height: 20,
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: Row(
                               children: [
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
-                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '$name',
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(
+                                    name == null
+                                        ? Container(
+                                            padding: const EdgeInsets.all(1.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(8.0)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.1),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                )
+                                              ],
+                                            ),
+                                            child: Row(children: [
+                                              /// Image
+                                              Shimmer.fromColors(
+                                                period:
+                                                    const Duration(seconds: 1),
+                                                baseColor: Colors.grey[300]!,
+                                                highlightColor:
+                                                    Colors.grey[100]!,
+                                                child: Container(
+                                                  width: screenSize.width * 0.3,
+                                                  height:
+                                                      screenSize.height * 0.01,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ]),
+                                          )
+                                        : Text(
+                                            '$name',
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                    const SizedBox(
                                       height: 5,
                                     ),
-                                    SizedBox(
-                                      width: screenSize.width * 0.55,
-                                      child: Text(
-                                        "$email",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                        ),
-                                      ),
-                                    ),
+                                    email == null
+                                        ? Container(
+                                            padding: const EdgeInsets.all(1.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(8.0)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.1),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                )
+                                              ],
+                                            ),
+                                            child: Row(children: [
+                                              /// Image
+                                              Shimmer.fromColors(
+                                                period:
+                                                    const Duration(seconds: 1),
+                                                baseColor: Colors.grey[300]!,
+                                                highlightColor:
+                                                    Colors.grey[100]!,
+                                                child: Container(
+                                                  width:
+                                                      screenSize.width * 0.55,
+                                                  height:
+                                                      screenSize.height * 0.02,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ]),
+                                          )
+                                        : SizedBox(
+                                            width: screenSize.width * 0.55,
+                                            child: Text(
+                                              "$email",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ],
@@ -166,38 +243,25 @@ class _AccountScreenStateState extends State<AccountScreen> {
                         icon: FontAwesomeIcons.penToSquare,
                         title: "Chỉnh sửa thông tin",
                       ),
-                      currentUser == admin
-                          ? listTitle(
-                              onPress: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OrderScreen()));
-                              },
-                              icon: FontAwesomeIcons.landmark,
-                              title: "Lịch sử đặt phòng của user",
-                            )
-                          : listTitle(
-                              onPress: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OrderScreen()));
-                              },
-                              icon: FontAwesomeIcons.landmark,
-                              title: "Lịch sử đặt phòng",
-                            ),
+                      listTitle(
+                        onPress: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const TabBarScreen()));
+                        },
+                        icon: FontAwesomeIcons.landmark,
+                        title: "Lịch sử đặt phòng",
+                      ),
                       listTitle(
                         onPress: () async {
-                          final SharedPreferences sharedPreferences =
-                              await SharedPreferences.getInstance();
-                          sharedPreferences.remove('email');
-                          Navigator.pushNamed(context, SignInScreen.id);
-                          EasyLoading.showSuccess(
-                            'Đăng xuất thành công!',
-                            duration: Duration(milliseconds: 1300),
-                            maskType: EasyLoadingMaskType.black,
-                          );
+                          FirebaseAuth.instance.signOut();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignInScreen(),
+                              ));
+                          EasyLoading.showSuccess("Đăng xuất thành công !");
                         },
                         icon: FontAwesomeIcons.rightFromBracket,
                         title: "Đăng xuất",
@@ -209,15 +273,43 @@ class _AccountScreenStateState extends State<AccountScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40, left: 40),
-              child: CircleAvatar(
-                radius: 55,
-                backgroundColor: Colors.blueGrey,
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage("$avatarUser"),
-                  radius: 50,
-                  // backgroundColor: ,
-                ),
-              ),
+              child: avatarUser == null
+                  ? Container(
+                      padding: const EdgeInsets.all(1.0),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          )
+                        ],
+                      ),
+                      child: Row(children: [
+                        /// Image
+                        Shimmer.fromColors(
+                          period: const Duration(seconds: 1),
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.blueGrey,
+                            radius: 50,
+                          ),
+                        ),
+                      ]),
+                    )
+                  : CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage("$avatarUser"),
+                        radius: 50,
+                        // backgroundColor: ,
+                      ),
+                    ),
             ),
           ],
         ),
